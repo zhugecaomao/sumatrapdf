@@ -60,7 +60,7 @@ void DeleteThumbnailForFile(Str filePath) {
     }
     bool ok = file::Delete(thumbPath);
     const auto* status = ok ? "ok" : "failed";
-    logf("DeleteThumbnailForFile: file::Remove('%s') %s\n", thumbPath, Str(status));
+    logf("DeleteThumbnailForFile: file::Remove('%s') %s\\n", thumbPath, Str(status));
 }
 
 bool PixmapIsEmpty(const Pixmap* px) {
@@ -122,7 +122,7 @@ bool ThumbnailSizeMatchesType(Size sz) {
 // empty if the data isn't a PNG
 Size PngSizeFromData(Str data) {
     constexpr int kIhdrEnd = 24;
-    static const u8 kSignature[8] = {0x89, 'P', 'N', 'G', '\r', '\n', 0x1a, '\n'};
+    static const u8 kSignature[8] = {0x89, 'P', 'N', 'G', '\\r', '\\n', 0x1a, '\\n'};
     if (len(data) < kIhdrEnd || memcmp(data.s, kSignature, sizeof(kSignature)) != 0) {
         return {};
     }
@@ -132,7 +132,7 @@ Size PngSizeFromData(Str data) {
     const u8* s = (const u8*)data.s;
     u32 width = be32(s + 16);
     u32 height = be32(s + 20);
-    // PNG 宽高必须为正数, 且不能超过有符号 int 的范围.
+    // PNG dimensions must be positive and fit within a signed int.
     if (width == 0 || height == 0 || width > 0x7fffffffU || height > 0x7fffffffU) {
         return {};
     }
